@@ -5,7 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.ts -r tsconfig-paths/register"
+    "dev": "nodemon index.ts -r tsconfig-paths/register",
+    "migrate:dev": "npx prisma migrate dev",
+    "generate": "npx prisma generate"
   },
   "keywords": [],
   "author": "",
