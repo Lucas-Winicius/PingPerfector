@@ -15,15 +15,15 @@ export function fullName(name: string): string | null {
 
 export function nick(nick: string): string | null {
   if (!nick) {
-    return "Please enter a nickname.";
+    return "Please enter a nick.";
   }
 
   if (nick.length > 30) {
-    return "You can use a maximum of 30 characters in your nickname.";
+    return "You can use a maximum of 30 characters in your nick.";
   }
 
   if (nick.length < 3) {
-    return "Your nickname must have at least 3 characters.";
+    return "Your nick must have at least 3 characters.";
   }
 
   return null;

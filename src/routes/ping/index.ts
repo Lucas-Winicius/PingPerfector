@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import prisma from "../../../lib/prisma";
+import prisma from "../../lib/prisma";
 
 async function Ping(req: Request, res: Response) {
   const { now } = req.query;

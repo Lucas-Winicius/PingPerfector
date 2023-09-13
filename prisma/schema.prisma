@@ -11,9 +11,9 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  fullName String
-  nick     String @unique @db.VarChar(30)
-  email    String @unique
-  pass     String
+  id    Int    @id @default(autoincrement())
+  name  String
+  nick  String @unique @db.VarChar(30)
+  email String @unique
+  pass  String
 }
