@@ -16,4 +16,6 @@ model User {
   nick  String @unique @db.VarChar(30)
   email String @unique
   pass  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
