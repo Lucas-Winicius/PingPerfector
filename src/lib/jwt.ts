@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import JwtDecodedType from "../@types/JwtDecodedType";
 
 class JWT {
   private JWT_SECRET: string;
@@ -15,9 +16,9 @@ class JWT {
 
   decrypt(code: string) {
     try {
-      const JWT_STRING = jwt.verify(code, this.JWT_SECRET);
+      const decoded = jwt.verify(code, this.JWT_SECRET) as JwtDecodedType;
 
-      return { success: true, JWT_STRING };
+      return { success: true, decoded };
     } catch (error) {
       return { success: false, error };
     }

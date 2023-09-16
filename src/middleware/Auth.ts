@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { NextFunction, Request, Response } from "express";
 import jwt from "../lib/jwt";
+import JwtDecodedType from "../@types/JwtDecodedType";
 
 declare global {
   namespace Express {
     interface Request {
       token?: string;
-      unencryptedToken?: object;
+      unencryptedToken?: JwtDecodedType;
     }
   }
 }
@@ -32,7 +33,7 @@ async function Auth(req: Request, res: Response, next: NextFunction) {
     return res.status(401).json({ error: "Invalid token" });
   }
 
-  req.unencryptedToken = unencryptedToken;
+  req.unencryptedToken = unencryptedToken.decoded;
 
   next();
 }
