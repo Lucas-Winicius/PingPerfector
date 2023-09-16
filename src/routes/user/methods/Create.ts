@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Validate from "../../../lib/UserValidations";
 import prisma from "../../../lib/prisma";
+import jwt from "../../../lib/jwt";
 
 async function Create(req: Request, res: Response) {
   const body = req.body;
@@ -21,7 +22,9 @@ async function Create(req: Request, res: Response) {
       },
     });
 
-    return res.status(200).json(user);
+    const userToken = jwt.create(user);
+
+    return res.status(200).json({ user, userToken });
   } catch (e) {
     return res.status(500).json(e);
   }
