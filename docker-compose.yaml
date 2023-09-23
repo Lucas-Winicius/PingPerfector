@@ -1,0 +1,35 @@
+services:
+  api:
+    build: .
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - ./volumes/db:/var/lib/postgresql
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+    depends_on:
+      - db
+
+  redis:
+    image: redis
+    volumes:
+      - ./volumes/redis:/data
+    ports:
+      - 6379:6379

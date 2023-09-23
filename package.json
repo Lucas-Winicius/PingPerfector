@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "dev": "nodemon index.ts -r tsconfig-paths/register",
     "migrate:dev": "npx prisma migrate dev",
