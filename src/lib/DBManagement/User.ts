@@ -89,6 +89,36 @@ class UserDatabase {
       });
     }
   }
+
+  async delete(id: string | number) {
+    const intId = Number(id);
+    try {
+      const deletedUser = await prisma.user.delete({ where: { id: intId } });
+
+      if (!deletedUser) {
+        return responsePattern({
+          mode: "success",
+          status: 404,
+          message:
+            "User not found: The specified user cannot be deleted because it doesn't exist.",
+        });
+      }
+
+      redis.del(`user:${id}`);
+      
+      return responsePattern({
+        mode: "success",
+        message: "The user has been successfully removed.",
+        data: deletedUser,
+      });
+    } catch (error) {
+      return responsePattern({
+        mode: "error",
+        message: "Oops! Something went wrong while deleting the user.",
+        data: error,
+      });
+    }
+  }
 }
 
 export default new UserDatabase();
