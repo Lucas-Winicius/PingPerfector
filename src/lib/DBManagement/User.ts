@@ -4,7 +4,7 @@ import redis from "../redis";
 import responsePattern from "../responsePattern";
 
 class UserDatabase {
-  async createUser(data: UserTypes) {
+  async create(data: UserTypes) {
     try {
       const response = await prisma.user.create({ data });
       redis.setEx(`user:${response.id}`, 7200, JSON.stringify(response));
@@ -25,7 +25,7 @@ class UserDatabase {
     }
   }
 
-  async getUser(id: string | number) {
+  async get(id: string | number) {
     const intId = Number(id);
     try {
       const cacheData = await redis.get(`user:${id}`);
@@ -62,6 +62,29 @@ class UserDatabase {
       return responsePattern({
         mode: "error",
         message: "We encountered an issue while trying to fetch user data.",
+        data: error,
+      });
+    }
+  }
+
+  async update(id: string | number, data: UserTypes) {
+    const intId = Number(id);
+    try {
+      const user = await prisma.user.update({ where: { id: intId }, data });
+      redis.setEx(`user:${id}`, 7200, JSON.stringify(user));
+
+      if (!user) {
+        return responsePattern({
+          mode: "success",
+          status: 404,
+          message:
+            "Sorry, we couldn't find the user you're attempting to edit.",
+        });
+      }
+    } catch (error) {
+      return responsePattern({
+        mode: "error",
+        message: "Oops! Something went wrong while editing the user.",
         data: error,
       });
     }
