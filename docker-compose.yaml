@@ -18,6 +18,9 @@ services:
     environment:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: root
+      POSTGRES_DB: db
+    ports:
+      - 8888:5432
 
   adminer:
     image: adminer

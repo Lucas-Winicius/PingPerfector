@@ -25,8 +25,9 @@
             "unix"
         ],
         "quotes": [
-            "error",
-            "double"
+            "warn",
+            "double",
+            { "allowTemplateLiterals": true }
         ],
         "semi": [
             "error",
