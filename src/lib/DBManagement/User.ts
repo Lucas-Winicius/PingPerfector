@@ -7,7 +7,7 @@ class UserDatabase {
   async create(data: UserTypes) {
     try {
       const response = await prisma.user.create({ data });
-      redis.setEx(`user:${response.id}`, 7200, JSON.stringify(response));
+      redis.setEx(`user:${response.nick}`, 7200, JSON.stringify(response));
 
       return responsePattern({
         mode: "success",
@@ -25,10 +25,9 @@ class UserDatabase {
     }
   }
 
-  async get(id: string | number) {
-    const intId = Number(id);
+  async get(nick: string) {
     try {
-      const cacheData = await redis.get(`user:${id}`);
+      const cacheData = await redis.get(`user:${nick}`);
 
       if (cacheData) {
         console.log("Encontrado em cache");
@@ -40,7 +39,7 @@ class UserDatabase {
         });
       }
 
-      const user = await prisma.user.findFirst({ where: { id: intId } });
+      const user = await prisma.user.findFirst({ where: { nick } });
       console.log("Buscando na base de dados");
 
       if (!user) {
@@ -51,7 +50,7 @@ class UserDatabase {
         });
       }
 
-      redis.setEx(`user:${user.id}`, 7200, JSON.stringify(user));
+      redis.setEx(`user:${user.nick}`, 7200, JSON.stringify(user));
 
       return responsePattern({
         mode: "success",
@@ -105,7 +104,7 @@ class UserDatabase {
       }
 
       redis.del(`user:${id}`);
-      
+
       return responsePattern({
         mode: "success",
         message: "The user has been successfully removed.",

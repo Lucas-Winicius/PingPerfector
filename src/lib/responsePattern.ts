@@ -5,7 +5,7 @@ interface ResponseOptions {
   data?: object;
 }
 
-function createResponse({ mode, status, message, data }: ResponseOptions) {
+function responsePattern({ mode, status, message, data }: ResponseOptions) {
   if (mode === "success") {
     return {
       status: status || 200,
@@ -23,4 +23,4 @@ function createResponse({ mode, status, message, data }: ResponseOptions) {
   }
 }
 
-export default createResponse;
+export default responsePattern;

@@ -4,7 +4,7 @@ interface UserTypes {
   name: string;
   email: string;
   pass: string;
-  views: number;
+  views?: number;
   createdAt?: string;
   updatedAt?: string;
 }

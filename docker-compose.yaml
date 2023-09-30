@@ -32,6 +32,7 @@ services:
 
   redis:
     image: redis
+    command: redis-server --appendonly yes --save 7200 1
     volumes:
       - ./volumes/redis:/data
     ports:
