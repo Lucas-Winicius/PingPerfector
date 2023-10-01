@@ -5,6 +5,7 @@ declare global {
       DATABASE_URL?: string;
       REDIS_URL?: string;
       BCRYPT_SALT?: number;
+      JWT_SECRET?: string
     }
   }
 }
