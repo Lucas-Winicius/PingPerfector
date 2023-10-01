@@ -22,7 +22,7 @@ async function Create(req: Request, res: Response) {
 
   const processedData = await Treatments.treatUsers(body);
   const createdUser = await User.create(processedData);
-  const userToken = jwt.create(createdUser);
+  const userToken = jwt.create(createdUser.data);
 
   return res
     .cookie("UserAuthentication", userToken, {
