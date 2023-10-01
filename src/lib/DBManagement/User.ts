@@ -25,17 +25,17 @@ class UserDatabase {
     }
   }
 
-  async get(nick: string) {
+  async get(nick: string, sensitiveinfo?: boolean) {
     try {
       const cacheData = await redis.get(`user:${nick}`);
 
       if (cacheData) {
         console.log("Encontrado em cache");
-        const user = JSON.parse(cacheData);
+        const { pass, email, ...user } = JSON.parse(cacheData);
         return responsePattern({
           mode: "success",
           message: "Great news! We've located the user you were looking for.",
-          data: user,
+          data: sensitiveinfo ? { ...user, pass, email } : user,
         });
       }
 
@@ -52,10 +52,14 @@ class UserDatabase {
 
       redis.setEx(`user:${user.nick}`, 7200, JSON.stringify(user));
 
+      const { pass: _, email: __, ...userDisassembled } = user;
+
+      _ || __;
+
       return responsePattern({
         mode: "success",
         message: "The user's details have been successfully retrieved.",
-        data: user,
+        data: sensitiveinfo ? user : userDisassembled,
       });
     } catch (error) {
       return responsePattern({
