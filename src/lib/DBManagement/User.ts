@@ -30,7 +30,6 @@ class UserDatabase {
       const cacheData = await redis.get(`user:${nick}`);
 
       if (cacheData) {
-        console.log("Encontrado em cache");
         const { pass, email, ...user } = JSON.parse(cacheData);
         return responsePattern({
           mode: "success",
@@ -40,7 +39,6 @@ class UserDatabase {
       }
 
       const user = await prisma.user.findFirst({ where: { nick } });
-      console.log("Buscando na base de dados");
 
       if (!user) {
         return responsePattern({
@@ -54,7 +52,7 @@ class UserDatabase {
 
       const { pass: _, email: __, ...userDisassembled } = user;
 
-      _ || __;
+      _ || __; // to hide the error of unused variables
 
       return responsePattern({
         mode: "success",
