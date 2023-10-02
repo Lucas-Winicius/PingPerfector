@@ -26,7 +26,7 @@ async function Create(req: Request, res: Response) {
 
   return res
     .cookie("UserAuthentication", userToken, {
-      domain: "/",
+      path: "/",
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
     })
     .status(createdUser.status)
