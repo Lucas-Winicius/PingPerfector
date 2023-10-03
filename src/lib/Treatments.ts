@@ -5,8 +5,9 @@ class Treatments {
     return {
       name: body.name,
       nick: body.nick,
+      views: body.views ?? 0,
       email: body.email.toLowerCase(),
-      pass: body.pass, // Tratar senha depois
+      pass: body.pass,
     };
   }
 }

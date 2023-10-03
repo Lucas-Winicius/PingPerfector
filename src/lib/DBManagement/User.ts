@@ -68,12 +68,10 @@ class UserDatabase {
     }
   }
 
-  async update(id: string | number, data: UserTypes) {
-    const intId = Number(id);
+  async update(nick: string, data: UserTypes) {
     try {
-      const user = await prisma.user.update({ where: { id: intId }, data });
-      redis.setEx(`user:${id}`, 7200, JSON.stringify(user));
-
+      const user = await prisma.user.update({ where: { nick }, data });
+      
       if (!user) {
         return responsePattern({
           mode: "success",
@@ -82,6 +80,16 @@ class UserDatabase {
             "Sorry, we couldn't find the user you're attempting to edit.",
         });
       }
+      redis.setEx(`user:${nick}`, 7200, JSON.stringify(user));
+
+      console.log(user);
+
+      return responsePattern({
+        mode: "success",
+        status: 200,
+        message: "Changes to user profile saved.",
+        data: user,
+      });
     } catch (error) {
       return responsePattern({
         mode: "error",
