@@ -71,7 +71,7 @@ class UserDatabase {
   async update(nick: string, data: UserTypes) {
     try {
       const user = await prisma.user.update({ where: { nick }, data });
-      
+
       if (!user) {
         return responsePattern({
           mode: "success",
@@ -99,10 +99,9 @@ class UserDatabase {
     }
   }
 
-  async delete(id: string | number) {
-    const intId = Number(id);
+  async delete(nick: string) {
     try {
-      const deletedUser = await prisma.user.delete({ where: { id: intId } });
+      const deletedUser = await prisma.user.delete({ where: { nick } });
 
       if (!deletedUser) {
         return responsePattern({
@@ -113,7 +112,7 @@ class UserDatabase {
         });
       }
 
-      redis.del(`user:${id}`);
+      redis.del(`user:${nick}`);
 
       return responsePattern({
         mode: "success",
