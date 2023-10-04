@@ -40,16 +40,17 @@ class UserDatabase {
     });
   }
 
-  async get(nick: string, sensitiveinfo?: boolean) {
+  async get(nick?: string) {
     try {
       const cacheData = await redis.get(`user:${nick}`);
 
       if (cacheData) {
-        const { pass, email, ...user } = JSON.parse(cacheData);
+        const user = JSON.parse(cacheData);
+
         return responsePattern({
           mode: "success",
           message: "Great news! We've located the user you were looking for.",
-          data: sensitiveinfo ? { ...user, pass, email } : user,
+          data: user,
         });
       }
 
@@ -65,15 +66,40 @@ class UserDatabase {
 
       redis.setEx(`user:${user.nick}`, 7200, JSON.stringify(user));
 
-      const { pass: _, email: __, ...userDisassembled } = user;
+      return responsePattern({
+        mode: "success",
+        message: "The user's details have been successfully retrieved.",
+        data: user,
+      });
+    } catch (error) {
+      return responsePattern({
+        mode: "error",
+        message: "We encountered an issue while trying to fetch user data.",
+        data: error,
+      });
+    }
+  }
 
-      _ || __; // to hide the error of unused variables
+  async getByUserCode(userCode: string) {
+    try {
+      const user = await prisma.user.findFirst({ where: { userCode } });
+
+      if (!user) {
+        return responsePattern({
+          mode: "success",
+          status: 404,
+          message: "Sorry, we couldn't find the user you were looking for.",
+        });
+      }
+
+      redis.setEx(`user:${user.nick}`, 7200, JSON.stringify(user));
 
       return responsePattern({
         mode: "success",
         message: "The user's details have been successfully retrieved.",
-        data: sensitiveinfo ? user : userDisassembled,
+        data: user,
       });
+      
     } catch (error) {
       return responsePattern({
         mode: "error",
