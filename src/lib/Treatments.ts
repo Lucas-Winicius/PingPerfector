@@ -5,7 +5,7 @@ class Treatments {
     return {
       name: body.name,
       nick: body.nick,
-      views: body.views ?? 0,
+      userCode: "",
       email: body.email.toLowerCase(),
       pass: body.pass,
     };
