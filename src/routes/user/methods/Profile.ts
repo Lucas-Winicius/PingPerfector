@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import User from "../../../lib/DBManagement/User";
 
 async function Profile(req: Request, res: Response) {
-  const user = await User.get(req.body.decodedToken.nick, true);
+  const user = await User.getByUserCode(req.body.decodedToken.userCode);
 
-  res.status(200).json(user);
+  res.status(user.status).json(user);
 }
 
 export default Profile;

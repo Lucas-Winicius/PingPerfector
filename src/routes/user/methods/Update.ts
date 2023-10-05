@@ -20,11 +20,16 @@ async function Update(req: Request, res: Response) {
     );
   }
 
-  const processedData = await Treatments.treatUsers(body);
+  const processedData = await Treatments.treatUsers(
+    body,
+    req.body.decodedToken.userCode,
+  );
   const editedUser = await User.update(
     req.body.decodedToken.nick,
+    req.body.decodedToken.userCode,
     processedData,
   );
+
   const userToken = jwt.create(editedUser.data);
 
   res
