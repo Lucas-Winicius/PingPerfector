@@ -5,6 +5,7 @@ import Profile from "./Profile";
 import AuthVerification from "../../../middlewares/AuthVerification";
 import Update from "./Update";
 import Delete from "./Delete";
+import CountUsers from "./CountUsers";
 
 const methodsRoutes = Router();
 
@@ -13,5 +14,7 @@ methodsRoutes.get("/user", Get);
 methodsRoutes.get("/user/profile", AuthVerification, Profile);
 methodsRoutes.put("/user", AuthVerification, Update);
 methodsRoutes.delete("/user", AuthVerification, Delete);
+
+methodsRoutes.get("/user/all", CountUsers);
 
 export default methodsRoutes;
