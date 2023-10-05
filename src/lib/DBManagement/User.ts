@@ -5,10 +5,12 @@ import responsePattern from "../responsePattern";
 
 class UserDatabase {
   private queue: UserTypes[];
+  private queueForDelete: string[];
 
   constructor() {
     this.clearQueue();
     this.queue = [];
+    this.queueForDelete = [];
   }
 
   clearQueue() {
@@ -20,6 +22,17 @@ class UserDatabase {
             skipDuplicates: true,
           });
           this.queue = [];
+        }
+
+        if (this.queueForDelete.length) {
+          await prisma.user.deleteMany({
+            where: {
+              userCode: {
+                in: this.queueForDelete,
+              },
+            },
+          });
+          this.queueForDelete = [];
         }
       } catch (e) {
         console.log();
@@ -99,7 +112,6 @@ class UserDatabase {
         message: "The user's details have been successfully retrieved.",
         data: user,
       });
-
     } catch (error) {
       return responsePattern({
         mode: "error",
@@ -121,7 +133,7 @@ class UserDatabase {
             "Sorry, we couldn't find the user you're attempting to edit.",
         });
       }
-      
+
       redis.setEx(`user:${nick}`, 7200, JSON.stringify(user));
 
       return responsePattern({
@@ -139,33 +151,15 @@ class UserDatabase {
     }
   }
 
-  async delete(nick: string) {
-    try {
-      const deletedUser = await prisma.user.delete({ where: { nick } });
+  delete(userCode: string) {
+    this.queueForDelete.push(userCode);
 
-      if (!deletedUser) {
-        return responsePattern({
-          mode: "success",
-          status: 404,
-          message:
-            "User not found: The specified user cannot be deleted because it doesn't exist.",
-        });
-      }
-
-      redis.del(`user:${nick}`);
-
-      return responsePattern({
-        mode: "success",
-        message: "The user has been successfully removed.",
-        data: deletedUser,
-      });
-    } catch (error) {
-      return responsePattern({
-        mode: "error",
-        message: "Oops! Something went wrong while deleting the user.",
-        data: error,
-      });
-    }
+    return responsePattern({
+      mode: "success",
+      status: 202,
+      message:
+        "The request to delete the user has been accepted successfully. The user has been removed.",
+    });
   }
 }
 
