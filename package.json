@@ -1,5 +1,5 @@
 {
-  "name": "rinha_de_piadas",
+  "name": "ping_perfector",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "nodemon index.ts -r tsconfig-paths/register",
     "migrate:dev": "npx prisma migrate dev",
+    "migrate": "npx prisma migrate deploy",
     "generate": "npx prisma generate"
   },
   "keywords": [],
