@@ -53,17 +53,20 @@ class UserDatabase {
     });
   }
 
-  async get(nick?: string) {
+  async get(nick: string, sensitiveInfo?: boolean) {
     try {
       const cacheData = await redis.get(`user:${nick}`);
 
       if (cacheData) {
         const user = JSON.parse(cacheData);
+        const { pass: _, ...fragmentedUser } = user;
+
+        _;
 
         return responsePattern({
           mode: "success",
           message: "Great news! We've located the user you were looking for.",
-          data: user,
+          data: sensitiveInfo ? user : fragmentedUser,
         });
       }
 
@@ -79,10 +82,14 @@ class UserDatabase {
 
       redis.setEx(`user:${user.nick}`, 7200, JSON.stringify(user));
 
+      const { pass: _, ...fragmentedUser } = user;
+
+      _;
+
       return responsePattern({
         mode: "success",
         message: "The user's details have been successfully retrieved.",
-        data: user,
+        data: sensitiveInfo ? user : fragmentedUser,
       });
     } catch (error) {
       return responsePattern({
