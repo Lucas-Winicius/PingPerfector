@@ -39,8 +39,8 @@ If you're going to use Docker, just paste the following code.
 
 ```bash
 PORT=3000
-DATABASE_URL="postgresql://root:root@your_computer's_IP_address:8888/db"
-REDIS_URL="redis://your_computer's_IP_address:6379/0"
+DATABASE_URL="postgresql://root:root@db:8888/db"
+REDIS_URL="redis://redis:6379/0"
 JWT_SECRET="Your secret"
 ```
 
